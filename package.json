@@ -1,5 +1,5 @@
 {
-  "name": "assemblyscript-cbor",
+  "name": "@zondax/assemblyscript-cbor",
   "version": "0.0.0",
   "description": "AssemblyScript CBOR enconder/decoder",
   "main": "assembly/index.ts",
