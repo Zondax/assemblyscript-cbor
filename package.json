@@ -6,7 +6,7 @@
   "repository": "https://github.com/Zondax/assemblyscript-cbor.git",
   "author": "Zondax AG",
   "license": "Apache 2.0",
-  "dependencies": {
+  "devDependencies": {
     "assemblyscript": "^0.20.8"
   },
   "scripts": {
