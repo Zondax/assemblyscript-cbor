@@ -1,0 +1,17 @@
+{
+  "name": "assemblyscript-cbor",
+  "version": "0.0.0",
+  "description": "AssemblyScript CBOR enconder/decoder",
+  "main": "assembly/index.ts",
+  "repository": "https://github.com/Zondax/assemblyscript-cbor.git",
+  "author": "Zondax AG",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "assemblyscript": "^0.20.8"
+  },
+  "scripts": {
+    "asbuild:debug": "asc assembly/index.ts --target debug --bindings esm --use abort=",
+    "asbuild:release": "asc assembly/index.ts --target release --bindings esm --use abort=",
+    "asbuild": "npm run asbuild:debug && npm run asbuild:release"
+  }
+}
