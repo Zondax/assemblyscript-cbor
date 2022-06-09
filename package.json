@@ -13,5 +13,12 @@
     "asbuild:debug": "asc assembly/index.ts --target debug --bindings esm --use abort=",
     "asbuild:release": "asc assembly/index.ts --target release --bindings esm --use abort=",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./build/release.js",
+      "types": "./build/release.d.ts"
+    }
   }
 }
