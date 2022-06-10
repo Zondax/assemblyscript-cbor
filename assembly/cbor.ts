@@ -25,11 +25,11 @@ export class CBOREncoder {
         this.writeUint8(0xf5);
     }
 
-    addNull(value:null):void {
+    addNull():void {
         this.writeUint8(0xf6);
     }
 
-    addUndefined(value:undefined):void {
+    addUndefined():void {
         this.writeUint8(0xf7);
     }
 

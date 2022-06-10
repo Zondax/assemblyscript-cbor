@@ -10,9 +10,13 @@
     "assemblyscript": "^0.20.8"
   },
   "scripts": {
-    "asbuild:debug": "asc assembly/index.ts --target debug --bindings esm --use abort=",
-    "asbuild:release": "asc assembly/index.ts --target release --bindings esm --use abort=",
-    "asbuild": "npm run asbuild:debug && npm run asbuild:release"
+    "asbuild:debug": "asc assembly/index.ts --target debug",
+    "asbuild:release": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
+    "asbuild:test:debug": "asc assembly/test_index.ts --target debug",
+    "asbuild:test:release": "asc assembly/test_index.ts --target release",
+    "asbuild:test": "npm run asbuild:test:debug && npm run asbuild:test:release",
+    "test": "jest"
   },
   "type": "module",
   "exports": {
