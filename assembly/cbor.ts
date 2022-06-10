@@ -33,6 +33,14 @@ export class CBOREncoder {
         this.writeUint8(0xf7);
     }
 
+    addObject(keysLen:u32):void{
+        this.writeTypeAndLength(5, keysLen);
+    }
+
+    addKey(key:string):void{
+        this.addString(key);
+    }
+
     addString(value:string):void {
         const utf8data: Array<u8> = [];
         for (let i = 0; i < value.length; ++i) {
@@ -69,19 +77,63 @@ export class CBOREncoder {
     }
 
     addUint8(value:u8):void {
-        this.writeUint8(value)
+        this.writeTypeAndLength(0, u64(value))
     }
 
     addUint16(value:u16):void {
-        this.writeUint16(value)
+        this.writeTypeAndLength(0, u64(value))
     }
 
     addUint32(value:u32):void {
-        this.writeUint32(value)
+        this.writeTypeAndLength(0, u64(value))
     }
 
     addUint64(value:u64):void {
-        this.writeUint64(value)
+        this.writeTypeAndLength(0, u64(value))
+    }
+
+    addInt8(value:i8):void {
+        if (0 <= value && value <= POW_2_53)
+            this.writeTypeAndLengthSigned(0, i64(value));
+        if (-POW_2_53 <= value && value < 0)
+            this.writeTypeAndLengthSigned(1, i64(-(value + 1)));
+    }
+
+    addInt16(value:i16):void {
+        if (0 <= value && value <= POW_2_53)
+            this.writeTypeAndLengthSigned(0, i64(value));
+        if (-POW_2_53 <= value && value < 0)
+            this.writeTypeAndLengthSigned(1, i64(-(value + 1)));
+    }
+
+    addInt32(value:i32):void {
+        if (0 <= value && value <= POW_2_53)
+            this.writeTypeAndLengthSigned(0, i64(value));
+        if (-POW_2_53 <= value && value < 0)
+            this.writeTypeAndLengthSigned(1, i64(-(value + 1)));
+    }
+
+    addInt64(value:i64):void {
+        if (0 <= value && value <= POW_2_53)
+            this.writeTypeAndLengthSigned(0, i64(value));
+        if (-POW_2_53 <= value && value < 0)
+            this.writeTypeAndLengthSigned(1, i64(-(value + 1)));
+    }
+
+    addF32(value:f32):void {
+        this.writeUint8(0xfb);
+        this.writeFloat64(f64(value))
+    }
+
+    addF64(value:f64):void {
+        this.writeUint8(0xfb);
+        this.writeFloat64(value)
+    }
+
+    private writeFloat64(value:f64):void {
+        this.prepareWrite(8)
+        this.dataView.setFloat64(this.offset, value)
+        this.commitWrite();
     }
 
     private writeUint8(value:u8):void {
@@ -141,6 +193,24 @@ export class CBOREncoder {
 
 
     private writeTypeAndLength(type:u8, length:u64):void {
+        if (length < 24) {
+            this.writeUint8(u8(type << 5 | length));
+        } else if (length < 0x100) {
+            this.writeUint8(u8(type << 5 | 24));
+            this.writeUint8(u8(length));
+        } else if (length < 0x10000) {
+            this.writeUint8(u8(type << 5 | 25));
+            this.writeUint16(u16(length));
+        } else if (length < 0x100000000) {
+            this.writeUint8(u8(type << 5 | 26));
+            this.writeUint32(u32(length));
+        } else {
+            this.writeUint8(u8(type << 5 | 27));
+            this.writeUint64(u64(length));
+        }
+    }
+
+    private writeTypeAndLengthSigned(type:u8, length:i64):void {
         if (length < 24) {
             this.writeUint8(u8(type << 5 | length));
         } else if (length < 0x100) {
