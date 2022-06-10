@@ -4,7 +4,8 @@
       "outFile": "build/debug.wasm",
       "textFile": "build/debug.wat",
       "debug": true,
-      "stats": true
+      "stats": true,
+      "bindings": "esm"
     },
     "release": {
       "outFile": "build/release.wasm",
@@ -13,7 +14,8 @@
       "shrinkLevel": 0,
       "converge": false,
       "noAssert": false,
-      "stats": true
+      "stats": true,
+      "bindings": "esm"
     }
   }
 }
