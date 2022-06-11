@@ -5,7 +5,8 @@
       "textFile": "build/debug.wat",
       "debug": true,
       "stats": true,
-      "bindings": "esm"
+      "bindings": "esm",
+      "sourceMap": true
     },
     "release": {
       "outFile": "build/release.wasm",

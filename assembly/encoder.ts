@@ -228,15 +228,3 @@ export class CBOREncoder {
         }
     }
 }
-
-export class CBORDecoder{
-    private data: ArrayBuffer
-    private dataView: DataView
-    private offset: u32
-
-    constructor(serializedData: Uint8Array) {
-        this.data = serializedData
-        this.dataView = new DataView(this.data);
-        this.offset = 0;
-    }
-}
