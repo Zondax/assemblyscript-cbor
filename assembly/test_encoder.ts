@@ -1,4 +1,4 @@
-import {CBOREncoder} from "./cbor";
+import {CBOREncoder} from "./encoder";
 
 
 export function encodeNull():ArrayBuffer {
