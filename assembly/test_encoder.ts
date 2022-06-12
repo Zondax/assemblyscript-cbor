@@ -107,12 +107,7 @@ export function encodeTrue():ArrayBuffer {
 }
 
 export function encodeArrayU8():ArrayBuffer {
-    const data = new Array<u8>()
-    data.push(1)
-    data.push(43)
-    data.push(66)
-    data.push(234)
-    data.push(111)
+    const data:u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
     encoder.addArrayU8(data)
@@ -132,12 +127,7 @@ export function encodeObject():ArrayBuffer {
 }
 
 export function encodeAll():ArrayBuffer {
-    const data = new Array<u8>()
-    data.push(1)
-    data.push(43)
-    data.push(66)
-    data.push(234)
-    data.push(111)
+    const data :u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
     encoder.addObject(15)
