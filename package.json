@@ -13,7 +13,7 @@
     "asbuild:debug": "asc assembly/index.ts --target debug",
     "asbuild:release": "asc assembly/index.ts --target release",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
-    "asbuild:test:debug": "asc assembly/test_index.ts --target debug",
+    "asbuild:test:debug": "asc assembly/test_index.ts --target debug --exportRuntime",
     "asbuild:test": "npm run asbuild:test:debug",
     "test": "jest"
   },

@@ -159,13 +159,16 @@ export class CBORDecoder{
         if (majorType === 7) {
             switch (additionalInformation) {
                 case 25:
-                    this.handler.setFloat("",this.readFloat16())
+                    this.handler.setFloat(this.lastKey, this.readFloat16())
+                    this.lastKey = ""
                     return
                 case 26:
-                    this.handler.setFloat("",this.readFloat32())
+                    this.handler.setFloat(this.lastKey, this.readFloat32())
+                    this.lastKey = ""
                     return
                 case 27:
-                    this.handler.setFloat("",this.readFloat64())
+                    this.handler.setFloat(this.lastKey, this.readFloat64())
+                    this.lastKey = ""
                     return
             }
         }
@@ -176,10 +179,12 @@ export class CBORDecoder{
 
         switch (majorType) {
             case 0:
-                this.handler.setInteger("", length);
+                this.handler.setInteger(this.lastKey, length);
+                this.lastKey = ""
                 return
             case 1:
-                this.handler.setInteger("", -1 - length);
+                this.handler.setInteger(this.lastKey, -1 - length);
+                this.lastKey = ""
                 return
             case 2:
                 // FIXME need support to Uint8Array on types, as this is a unstructured byte array
@@ -211,48 +216,68 @@ export class CBORDecoder{
                 } else{
                     this.appendUtf16Data(utf16data, length);
                 }
-                if(this.handler.stack.length > 0 && (this.handler.peek.isArr || this.handler.peek.isObj))
-                    this.handler.setString(this.lastKey, String.fromCharCodes(utf16data))
+                if(this.handler.stack.length > 0){
+                    if (this.handler.peek.isObj) {
+                        if (this.lastKey == "") {
+                            this.lastKey = String.fromCharCodes(utf16data)
+                        } else {
+                            this.handler.setString(this.lastKey, String.fromCharCodes(utf16data))
+                            this.lastKey = ""
+                        }
+                    }
+                    if(this.handler.peek.isArr){
+                        this.handler.setString(this.lastKey, String.fromCharCodes(utf16data))
+                        this.lastKey = ""
+                    }
+                }
                 else
                     this.handler.setString("", String.fromCharCodes(utf16data))
 
                 return
-            /*case 4:
-                var retArray;
+            case 4:
+                this.handler.pushArray(this.lastKey)
+                this.lastKey = ""
+
                 if (length < 0) {
-                    retArray = [];
-                    while (!readBreak())
-                        retArray.push(decodeItem());
+                    while (!this.readBreak())
+                        this.deserialize()
                 } else {
-                    retArray = new Array(length);
-                    for (i = 0; i < length; ++i)
-                        retArray[i] = decodeItem();
+                    for (let i = 0; i < length; ++i)
+                        this.deserialize()
                 }
-                return retArray;*/
-            /*case 5:
-                this.handler.pushObject("")
+                this.handler.popArray()
+                return
+            case 5:
+                this.handler.pushObject(this.lastKey)
+                this.lastKey = ""
                 for (let i = 0; i < length || length < 0 && !this.readBreak(); ++i) {
+                    // Deserialize key
                     this.deserialize()
-                    retObject[key] = decodeItem();
+                    // Deserialize value
+                    this.deserialize()
                 }
                 this.handler.popObject()
-                return*/
+                return
             case 6:
                 //return tagger(decodeItem(), length);
                 throw `tags not implemented`
             case 7:
                 switch (u32(length)) {
                     case 20:
-                        this.handler.setBoolean("", false);
+                        this.handler.setBoolean(this.lastKey, false);
+                        this.lastKey = ""
                         return
                     case 21:
-                        this.handler.setBoolean("", true);
+                        this.handler.setBoolean(this.lastKey, true);
+                        this.lastKey = ""
                         return
                     case 22:
-                        this.handler.setNull("");
+                        this.handler.setNull(this.lastKey);
+                        this.lastKey = ""
                         return
                     case 23:
-                        this.handler.setNull("");
+                        this.handler.setUndefined(this.lastKey);
+                        this.lastKey = ""
                         return
                     default:
                         throw `simple values not implemented`
