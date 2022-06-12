@@ -50,6 +50,11 @@ export class Handler extends JSONHandler {
         this.addValue(name, obj);
     }
 
+    setUndefined(name: string): void {
+        const obj = Value.Undefined();
+        this.addValue(name, obj);
+    }
+
     setInteger(name: string, value: i64): void {
         const obj = Value.Integer(value);
         this.addValue(name, obj);
@@ -106,6 +111,9 @@ export class Handler extends JSONHandler {
 // @ts-ignore
 @lazy const NULL: Null = new Null();
 
+// @ts-ignore
+@lazy const UNDEFINED: Undefined = new Undefined();
+
 export abstract class Value {
     static String(str: string): Str {
         return new Str(str);
@@ -124,6 +132,9 @@ export abstract class Value {
     }
     static Null(): Null {
         return NULL;
+    }
+    static Undefined(): Undefined {
+        return UNDEFINED;
     }
     static Array(): Arr {
         return new Arr();
@@ -154,6 +165,10 @@ export abstract class Value {
 
     get isNull(): boolean {
         return this instanceof Null;
+    }
+
+    get isUndefined(): boolean {
+        return this instanceof Undefined;
     }
 
     get isArr(): boolean {
@@ -238,8 +253,22 @@ export class Null extends Value {
         return "null";
     }
 
-    valueOf(): null {
-        return null;
+    valueOf(): boolean {
+        return false;
+    }
+}
+
+export class Undefined extends Value {
+    constructor() {
+        super();
+    }
+
+    stringify(): string {
+        return "undefined";
+    }
+
+    valueOf(): boolean {
+        return false;
     }
 }
 
