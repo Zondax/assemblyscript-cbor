@@ -1,3 +1,4 @@
-import { CBOREncoder } from "./cbor"
+import { CBOREncoder } from "./encoder"
+import { CBORDecoder } from "./decoder"
 
-export {CBOREncoder}
+export {CBOREncoder, CBORDecoder}

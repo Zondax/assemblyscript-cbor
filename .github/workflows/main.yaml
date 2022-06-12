@@ -4,6 +4,7 @@ on:
 
 jobs:
   build:
+    name: "Build"
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +22,7 @@ jobs:
         run: yarn asbuild
 
   test:
+    name: "Tests"
     timeout-minutes: 5
     needs:
       - build
@@ -38,5 +40,7 @@ jobs:
           yarn install
       - name: Build WASM file
         run: yarn asbuild:test
-      - name: Run tests
+      - name: Run encoding tests
         run: node tests/encoding.test.js
+      - name: Run decoding tests
+        run: node tests/decoding.test.js

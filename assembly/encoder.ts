@@ -227,5 +227,4 @@ export class CBOREncoder {
             this.writeUint64(u64(length));
         }
     }
-
 }
