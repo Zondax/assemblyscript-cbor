@@ -6,7 +6,7 @@ import {
     encodeInt8, encodeInt16, encodeInt32, encodeInt64,
     encodeF32, encodeF64,
     encodeObject, encodeAll
-} from "../build/release.js";
+} from "../build/debug.js";
 
 function buf2hex(buffer) { // buffer is an ArrayBuffer
     return [...new Uint8Array(buffer)]
