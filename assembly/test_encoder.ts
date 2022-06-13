@@ -164,3 +164,22 @@ export function encodeAll():ArrayBuffer {
 
     return encoder.serialize()
 }
+
+
+export function encodeNestedObjs():ArrayBuffer {
+
+    const encoder = new CBOREncoder()
+    encoder.addObject(1)
+    encoder.addKey("lvl1")
+    encoder.addObject(1)
+    encoder.addKey("lvl2")
+    encoder.addObject(1)
+    encoder.addKey("lvl3")
+    encoder.addObject(1)
+    encoder.addKey("lvl4")
+    encoder.addObject(1)
+    encoder.addKey("lvl5")
+    encoder.addUint8(132)
+
+    return encoder.serialize()
+}
