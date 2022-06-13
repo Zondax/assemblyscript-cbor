@@ -23,6 +23,8 @@
  SOFTWARE.
  *********************************************************************************/
 
+// Latest commit used --> https://github.com/paroga/cbor-js/commit/65dc49611107db83aff8308a6b381f4d7933824b
+
 import {Arr, Handler, JSONHandler, Value} from "./types";
 
 const POW_2_24 = 5.960464477539063e-8

@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 *********************************************************************************/
 
+// Latest commit used --> https://github.com/paroga/cbor-js/commit/65dc49611107db83aff8308a6b381f4d7933824b
+
 const POW_2_24 = 5.960464477539063e-8
 const POW_2_32 = 4294967296
 const POW_2_53 = 9007199254740992;

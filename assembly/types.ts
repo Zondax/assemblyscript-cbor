@@ -23,6 +23,7 @@
  SOFTWARE.
  *********************************************************************************/
 
+// Latest commit used --> https://github.com/near/assemblyscript-json/commit/1edab439e33acd787671618d33c1ec4250f523c9
 
 export abstract class JSONHandler {
     setString(name: string, value: string): void {}
