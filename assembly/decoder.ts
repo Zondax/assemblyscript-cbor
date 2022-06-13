@@ -1,4 +1,4 @@
-import {Arr, Handler, JSONHandler} from "./types";
+import {Arr, Handler, JSONHandler, Value} from "./types";
 
 const POW_2_24 = 5.960464477539063e-8
 const POW_2_32 = 4294967296
@@ -9,7 +9,7 @@ export class CBORDecoder{
     private dataView: DataView
     private offset: u32
     private lastKey: string
-    handler: Handler
+    private handler: Handler
 
     constructor(serializedData: ArrayBuffer) {
         this.data = serializedData
@@ -149,7 +149,7 @@ export class CBORDecoder{
         }
     }
 
-    deserialize():void {
+    private deserialize():void {
         const initialByte = this.readUint8();
         const majorType = initialByte >> 5;
         const additionalInformation = initialByte & 0x1f;
@@ -283,5 +283,10 @@ export class CBORDecoder{
                         throw `simple values not implemented`
                 }
         }
+    }
+
+    parse(): Value{
+        this.deserialize()
+        return this.handler.peek
     }
 }
