@@ -6,8 +6,8 @@ import {
     decodeNull,
     decodeFloat32, decodeFloat64,
     decodeObject,
-    decodeArrayU8,
-    decodeAll, decodeNestedObjs
+    decodeArrayU8, decodeArray, decodeAllInArray,
+    decodeAllInObj, decodeNestedObjs
 } from "../build/debug.js";
 
 let result;
@@ -39,8 +39,15 @@ assert.equal(result, true)
 result = decodeArrayU8()
 assert.equal(result, true)
 
-result = decodeAll()
+result = decodeArray()
+assert.equal(result, true)
+
+result = decodeAllInObj()
 assert.equal(result, true)
 
 result = decodeNestedObjs()
 assert.equal(result, true)
+
+result = decodeAllInArray()
+assert.equal(result, true)
+
