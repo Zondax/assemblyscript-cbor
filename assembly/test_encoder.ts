@@ -126,7 +126,18 @@ export function encodeObject():ArrayBuffer {
     return encoder.serialize()
 }
 
-export function encodeAll():ArrayBuffer {
+export function encodeArray():ArrayBuffer {
+    const encoder = new CBOREncoder()
+    encoder.addArray(4)
+    encoder.addString("key1")
+    encoder.addUint8(1)
+    encoder.addString("key2")
+    encoder.addUint8(100)
+
+    return encoder.serialize()
+}
+
+export function encodeAllInObj():ArrayBuffer {
     const data :u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
@@ -161,6 +172,51 @@ export function encodeAll():ArrayBuffer {
     encoder.addF64(166665455.55)
     encoder.addKey("f32")
     encoder.addF32(78752.323123)
+
+    return encoder.serialize()
+}
+
+
+export function encodeAllInArray():ArrayBuffer {
+    const data :u8[] = [1, 43, 66, 234, 111]
+
+    const encoder = new CBOREncoder()
+    encoder.addArray(31)
+    encoder.addString("uint8")
+    encoder.addUint8(132)
+    encoder.addString("uint16")
+    encoder.addUint16(6554)
+    encoder.addString("uint32")
+    encoder.addUint32(6554000)
+    encoder.addString("uint64")
+    encoder.addUint64(444842111226)
+    encoder.addString("int8")
+    encoder.addInt8(-127)
+    encoder.addString("int16")
+    encoder.addInt16(-31500)
+    encoder.addString("int32")
+    encoder.addInt32(-6554000)
+    encoder.addString("int64")
+    encoder.addInt64(-444842111226)
+    encoder.addString("arrayU8")
+    encoder.addArrayU8(data)
+    encoder.addString("true-value")
+    encoder.addBoolean(true)
+    encoder.addString("false-value")
+    encoder.addBoolean(false)
+    encoder.addString("null-value")
+    encoder.addNull()
+    encoder.addString("undefined-value")
+    encoder.addUndefined()
+    encoder.addString("f64")
+    encoder.addF64(166665455.55)
+    encoder.addString("f32")
+    encoder.addF32(78752.323123)
+    encoder.addObject(2)
+    encoder.addKey("int16")
+    encoder.addInt16(-31500)
+    encoder.addKey("int16")
+    encoder.addInt16(-31500)
 
     return encoder.serialize()
 }

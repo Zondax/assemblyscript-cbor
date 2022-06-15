@@ -59,8 +59,12 @@ export class CBOREncoder {
         this.writeUint8(0xf7);
     }
 
-    addObject(keysLen:u32):void{
-        this.writeTypeAndLength(5, keysLen);
+    addObject(len:u32):void{
+        this.writeTypeAndLength(5, len);
+    }
+
+    addArray(len:u32):void{
+        this.writeTypeAndLength(4, len);
     }
 
     addKey(key:string):void{
