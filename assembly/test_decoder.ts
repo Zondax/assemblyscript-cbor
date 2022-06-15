@@ -110,7 +110,23 @@ export function decodeArrayU8(): boolean {
     return result
 }
 
-export function decodeAll(): boolean{
+export function decodeArray(): boolean {
+    const buff = stringToArrayBuffer("84646b65793101646b6579321864")
+
+    const decoder = new CBORDecoder(buff)
+    const res = decoder.parse()
+    const arr = (<Arr>res).valueOf();
+
+    let result = arr.length == 4
+    const val1 = (arr.at(0) as Str).valueOf()
+    const val2 = (arr.at(1) as Integer).valueOf()
+    const val3 = (arr.at(2) as Str).valueOf()
+    const val4 = (arr.at(3) as Integer).valueOf()
+
+    return result && val1 == "key1" && val2 == 1 && val3 == "key2" && val4 == 100
+}
+
+export function decodeAllInObj(): boolean{
     const fixArray: u8[] = [1, 43, 66, 234, 111]
     const buff = stringToArrayBuffer("af6575696e743818846675696e74313619199a6675696e7433321a006401906675696e7436341b0000006792a7f0fa64696e7438387e65696e743136397b0b65696e7433323a0064018f65696e7436343b0000006792a7f0f967617272617955388501182b184218ea186f6a747275652d76616c7565f56b66616c73652d76616c7565f46a6e756c6c2d76616c7565f66f756e646566696e65642d76616c7565f763663634fb41a3de39df19999a63663332fb40f33a0520000000")
 
@@ -161,4 +177,64 @@ export function decodeNestedObjs(): bool{
         && (((obj.get("lvl1") as Obj).get("lvl2") as Obj).get("lvl3") as Obj).has("lvl4")
         && ((((obj.get("lvl1") as Obj).get("lvl2") as Obj).get("lvl3") as Obj).get("lvl4") as Obj).has("lvl5")
         && (((((obj.get("lvl1") as Obj).get("lvl2") as Obj).get("lvl3") as Obj).get("lvl4") as Obj).get("lvl5") as Integer).valueOf() == 132
+}
+
+export function decodeAllInArray(): boolean{
+    const fixArray: u8[] = [1, 43, 66, 234, 111]
+    const buff = stringToArrayBuffer("981f6575696e743818846675696e74313619199a6675696e7433321a006401906675696e7436341b0000006792a7f0fa64696e7438387e65696e743136397b0b65696e7433323a0064018f65696e7436343b0000006792a7f0f96a747275652d76616c7565f56b66616c73652d76616c7565f46a6e756c6c2d76616c7565f66f756e646566696e65642d76616c7565f763663634fb41a3de39df19999a63663332fb40f33a052000000067617272617955388501182b184218ea186fa265696e743136397b0b65696e743136397b0b")
+
+    const decoder = new CBORDecoder(buff)
+
+    const res = decoder.parse()
+    const arr = (<Arr>res).valueOf();
+
+    const uint8Str = (<Str>arr.at(0)).valueOf()
+    const uint16Str = (<Str>arr.at(2)).valueOf()
+    const uint32Str = (<Str>arr.at(4)).valueOf()
+    const uint64Str = (<Str>arr.at(6)).valueOf()
+    const int8Str = (<Str>arr.at(8)).valueOf()
+    const int16Str = (<Str>arr.at(10)).valueOf()
+    const int32Str = (<Str>arr.at(12)).valueOf()
+    const int64Str = (<Str>arr.at(14)).valueOf()
+    const trueValStr = (<Str>arr.at(16)).valueOf()
+    const falseValStr = (<Str>arr.at(18)).valueOf()
+    const nullValStr = (<Str>arr.at(20)).valueOf()
+    const undefinedValStr = (<Str>arr.at(22)).valueOf()
+    const f64Str = (<Str>arr.at(24)).valueOf()
+    const f32Str = (<Str>arr.at(26)).valueOf()
+    const arrayU8Str = (<Str>arr.at(28)).valueOf()
+
+    const uint8 = (<Integer>arr.at(1)).valueOf()
+    const uint16 = (<Integer>arr.at(3)).valueOf()
+    const uint32 = (<Integer>arr.at(5)).valueOf()
+    const uint64 = (<Integer>arr.at(7)).valueOf()
+    const int8 = (<Integer>arr.at(9)).valueOf()
+    const int16 = (<Integer>arr.at(11)).valueOf()
+    const int32 = (<Integer>arr.at(13)).valueOf()
+    const int64 = (<Integer>arr.at(15)).valueOf()
+    const trueVal = (<Bool>arr.at(17)).valueOf()
+    const falseVal = (<Bool>arr.at(19)).valueOf()
+    const nullVal = (<Null>arr.at(21)).valueOf()
+    const undefinedVal = (<Undefined>arr.at(23)).valueOf()
+    const f64 = (<Float>arr.at(25)).valueOf()
+    const f32 = (<Float>arr.at(27)).valueOf()
+    const arrayU8 = (<Arr>arr.at(29)).valueOf()
+    const obj = (<Obj>arr.at(30)).valueOf()
+
+    let arrayResult = arrayU8.length == fixArray.length
+    for( let i = 0; i < fixArray.length; i++){
+        arrayResult = arrayResult && (<Integer>arrayU8.at(i)).valueOf() == fixArray[i];
+    }
+
+    const strResult =  uint8Str == "uint8" && uint16Str == "uint16" && uint32Str == "uint32" && uint64Str == "uint64"
+                    &&  int8Str == "int8" && int16Str == "int16" && int32Str == "int32" && int64Str == "int64"
+                    && trueValStr == "true-value" && falseValStr == "false-value" && nullValStr == "null-value" && undefinedValStr == "undefined-value"
+                    && f64Str == "f64" && f32Str == "f32"
+                    && arrayU8Str == "arrayU8"
+
+    return strResult && uint8 == 132 && uint16 == 6554 && uint32 == 6554000 && uint64 == 444842111226
+        &&  int8 == -127 && int16 == -31500 && int32 == -6554000 && int64 == -444842111226
+        && !!trueVal && !falseVal && !nullVal && !undefinedVal
+        && f64 == 166665455.55 && f32 == 78752.3203125
+        && arrayResult
 }
