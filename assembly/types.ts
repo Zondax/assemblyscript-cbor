@@ -174,7 +174,7 @@ export abstract class Value {
         return UNDEFINED;
     }
     static Bytes(arr: Uint8Array): Bytes {
-        return new Bytes(arr);;
+        return new Bytes(arr);
     }
     static Array(): Arr {
         return new Arr();
@@ -336,7 +336,7 @@ export class Bytes extends Value {
     }
 
     stringify(): string {
-        return this._uint8arr.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+        return "h'" + this._uint8arr.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "") + "'";
     }
 
     valueOf(): Uint8Array {
