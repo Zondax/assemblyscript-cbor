@@ -2,6 +2,7 @@ import * as assert from "assert";
 import {
     decodeFalse, decodeTrue,
     decodeString,
+    decodeStringWithWeirdChar,
     decodeInteger,
     decodeNull,
     decodeFloat32, decodeFloat64,
@@ -32,6 +33,9 @@ assert.equal(result, 11231241314.11111)
 
 result = decodeString()
 assert.equal(result, "test value")
+
+result = decodeStringWithWeirdChar()
+assert.equal(result, "zoé")
 
 result = decodeObject()
 assert.equal(result, true)

@@ -81,6 +81,16 @@ export function decodeString(): string {
     return str
 }
 
+export function decodeStringWithWeirdChar(): string {
+    const buff = stringToArrayBuffer("647A6FC3A9")
+
+    const decoder = new CBORDecoder(buff)
+    const res = decoder.parse()
+
+    const str = (<Str>res).valueOf();
+    return str
+}
+
 export function decodeObject(): boolean {
     const buff = stringToArrayBuffer("a2646b65793101646b6579321864")
 

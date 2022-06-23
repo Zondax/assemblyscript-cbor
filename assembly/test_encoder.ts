@@ -92,6 +92,13 @@ export function encodeString():ArrayBuffer {
     return encoder.serialize()
 }
 
+export function encodeStringWithWeirdChar():ArrayBuffer {
+    const encoder = new CBOREncoder()
+    encoder.addString("léa")
+
+    return encoder.serialize()
+}
+
 export function encodeFalse():ArrayBuffer {
     const encoder = new CBOREncoder()
     encoder.addBoolean(false)

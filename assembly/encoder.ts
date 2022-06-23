@@ -77,32 +77,11 @@ export class CBOREncoder {
     }
 
     addString(value:string):void {
-        const utf8data: Uint8Array = new Uint8Array(value.length);
-        for (let i = 0; i < value.length; ++i) {
-            let charCode = value.charCodeAt(i);
-            if (charCode < 0x80) {
-                utf8data[i] = u8(charCode);
-            } else if (charCode < 0x800) {
-                utf8data[i] = u8(0xc0 | charCode >> 6);
-                utf8data[i] = u8(0x80 | charCode & 0x3f);
-            } else if (charCode < 0xd800) {
-                utf8data[i] = u8(0xe0 | charCode >> 12);
-                utf8data[i] = u8(0x80 | (charCode >> 6)  & 0x3f);
-                utf8data[i] = u8(0x80 | charCode & 0x3f);
-            } else {
-                charCode = (charCode & 0x3ff) << 10;
-                charCode |= value.charCodeAt(++i) & 0x3ff;
-                charCode += 0x10000;
+        const utf8data = String.UTF8.encode(value);
+        const buffer: Uint8Array = Uint8Array.wrap(utf8data);
 
-                utf8data[i] = u8(0xf0 | charCode >> 18);
-                utf8data[i] = u8(0x80 | (charCode >> 12)  & 0x3f);
-                utf8data[i] = u8(0x80 | (charCode >> 6)  & 0x3f);
-                utf8data[i] = u8(0x80 | charCode & 0x3f);
-            }
-        }
-
-        this.writeTypeAndLength(3, utf8data.length);
-        this.writeUint8Array(utf8data);
+        this.writeTypeAndLength(3, buffer.length);
+        this.writeUint8Array(buffer);
     }
 
     addArrayU8(value:Array<u8>):void{

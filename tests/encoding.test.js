@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import {
-    encodeString, encodeBytes, encodeFalse, encodeTrue, encodeNull, encodeUndefined,
+    encodeString, encodeStringWithWeirdChar, encodeBytes, encodeFalse, encodeTrue, encodeNull, encodeUndefined,
     encodeUint8, encodeUint16, encodeUint32, encodeUint64,
     encodeArrayU8,
     encodeInt8, encodeInt16, encodeInt32, encodeInt64,
@@ -18,6 +18,10 @@ let result;
 
 result = encodeString()
 assert.equal("6a746573742076616c7565", buf2hex(result))
+
+result = encodeStringWithWeirdChar()
+assert.equal("646cc3a961", buf2hex(result))
+
 
 result = encodeBytes()
 assert.equal("420102", buf2hex(result))
