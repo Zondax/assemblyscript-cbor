@@ -144,38 +144,6 @@ export class CBORDecoder{
         return length;
     }
 
-    private appendUtf16Data(utf16data: Array<i32>, length:i64):void {
-        for (let i = 0; i < length; ++i) {
-            let value = i32(this.readUint8());
-            if (value & 0x80) {
-                if (value < 0xe0) {
-                    value = (value & 0x1f) <<  6
-                        | (this.readUint8() & 0x3f);
-                    length -= 1;
-                } else if (value < 0xf0) {
-                    value = (value & 0x0f) << 12
-                        | (this.readUint8() & 0x3f) << 6
-                        | (this.readUint8() & 0x3f);
-                    length -= 2;
-                } else {
-                    value = (value & 0x0f) << 18
-                        | (this.readUint8() & 0x3f) << 12
-                        | (this.readUint8() & 0x3f) << 6
-                        | (this.readUint8() & 0x3f);
-                    length -= 3;
-                }
-            }
-
-            if (value < 0x10000) {
-                utf16data.push(value);
-            } else {
-                value -= 0x10000;
-                utf16data.push(0xd800 | (value >> 10));
-                utf16data.push(0xdc00 | (value & 0x3ff));
-            }
-        }
-    }
-
     private deserialize():void {
         const initialByte = this.readUint8();
         const majorType = initialByte >> 5;
@@ -239,30 +207,36 @@ export class CBORDecoder{
 
                 return
             case 3:
-                // https://github.com/AssemblyScript/assemblyscript/issues/1609
-                const utf16data: i32[] = [];
+                let data: Uint8Array = new Uint8Array(0);
                 if (length < 0) {
-                    while ((length = this.readIndefiniteStringLength(majorType)) >= 0)
-                        this.appendUtf16Data(utf16data, length);
-                } else{
-                    this.appendUtf16Data(utf16data, length);
+                    while ((length = this.readIndefiniteStringLength(majorType)) >= 0) {
+                        let tmp = new Uint8Array((data.byteLength+length) as u32)
+                        tmp.set(data)
+                        tmp.set(this.readArrayBuffer(length as u32), data.byteLength)
+                        data = tmp
+                    }
+                } else {
+                    let tmp = new Uint8Array(length as u32)
+                    tmp.set(this.readArrayBuffer(length as u32))
+                    data = tmp
                 }
+
                 if(this.handler.stack.length > 0){
                     if (this.handler.peek.isObj) {
                         if (this.lastKey == "") {
-                            this.lastKey = String.fromCharCodes(utf16data)
+                            this.lastKey = String.UTF8.decode(data.buffer)
                         } else {
-                            this.handler.setString(this.lastKey, String.fromCharCodes(utf16data))
+                            this.handler.setString(this.lastKey, String.UTF8.decode(data.buffer))
                             this.lastKey = ""
                         }
                     }
                     if(this.handler.peek.isArr){
-                        this.handler.setString(this.lastKey, String.fromCharCodes(utf16data))
+                        this.handler.setString(this.lastKey, String.UTF8.decode(data.buffer))
                         this.lastKey = ""
                     }
                 }
                 else
-                    this.handler.setString("", String.fromCharCodes(utf16data))
+                    this.handler.setString("", String.UTF8.decode(data.buffer))
 
                 return
             case 4:
