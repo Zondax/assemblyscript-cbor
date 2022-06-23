@@ -115,6 +115,16 @@ export function encodeArrayU8():ArrayBuffer {
     return encoder.serialize()
 }
 
+export function encodeBytes():ArrayBuffer {
+    const data: Uint8Array = new Uint8Array(2)
+    data.set([1,2])
+
+    const encoder = new CBOREncoder()
+    encoder.addBytes(data)
+
+    return encoder.serialize()    
+}
+
 export function encodeObject():ArrayBuffer {
     const encoder = new CBOREncoder()
     encoder.addObject(2)
@@ -181,7 +191,7 @@ export function encodeAllInArray():ArrayBuffer {
     const data :u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
-    encoder.addArray(31)
+    encoder.addArray(33)
     encoder.addString("uint8")
     encoder.addUint8(132)
     encoder.addString("uint16")
@@ -212,11 +222,13 @@ export function encodeAllInArray():ArrayBuffer {
     encoder.addF32(78752.323123)
     encoder.addString("arrayU8")
     encoder.addArrayU8(data)
-    encoder.addObject(2)
+    encoder.addObject(1)
     encoder.addKey("int16")
     encoder.addInt16(-31500)
-    encoder.addKey("int16")
-    encoder.addInt16(-31500)
+    encoder.addString("bytes")
+    const dataBuf: Uint8Array = new Uint8Array(2)
+    dataBuf.set([1,2])
+    encoder.addBytes(dataBuf)
 
     return encoder.serialize()
 }

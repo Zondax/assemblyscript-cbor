@@ -238,3 +238,14 @@ export function decodeAllInArray(): boolean{
         && f64 == 166665455.55 && f32 == 78752.3203125
         && arrayResult
 }
+
+/*export function decodeBytes(): ArrayBuffer {
+    const buff = stringToArrayBuffer("420102")
+
+    const decoder = new CBORDecoder(buff)
+
+    const res = decoder.parse()
+    const obj = (<Obj>res).valueOf()
+
+    return 
+}*/
