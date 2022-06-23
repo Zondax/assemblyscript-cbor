@@ -122,7 +122,7 @@ export function encodeBytes():ArrayBuffer {
     const encoder = new CBOREncoder()
     encoder.addBytes(data)
 
-    return encoder.serialize()    
+    return encoder.serialize()
 }
 
 export function encodeObject():ArrayBuffer {
@@ -150,8 +150,11 @@ export function encodeArray():ArrayBuffer {
 export function encodeAllInObj():ArrayBuffer {
     const data :u8[] = [1, 43, 66, 234, 111]
 
+    const dataBuf: Uint8Array = new Uint8Array(2)
+    dataBuf.set([1,2])
+
     const encoder = new CBOREncoder()
-    encoder.addObject(15)
+    encoder.addObject(16)
     encoder.addKey("uint8")
     encoder.addUint8(132)
     encoder.addKey("uint16")
@@ -182,6 +185,8 @@ export function encodeAllInObj():ArrayBuffer {
     encoder.addF64(166665455.55)
     encoder.addKey("f32")
     encoder.addF32(78752.323123)
+    encoder.addString("bytes")
+    encoder.addBytes(dataBuf)
 
     return encoder.serialize()
 }
