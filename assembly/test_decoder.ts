@@ -1,5 +1,5 @@
 import {CBORDecoder} from "./decoder";
-import {Arr, Bool, Float, Integer, Null, Obj, Str, Undefined, Value} from "./types";
+import {Arr, Bytes, Bool, Float, Integer, Null, Obj, Str, Undefined, Value} from "./types";
 
 function stringToArrayBuffer(val: string): ArrayBuffer {
     const buff = new ArrayBuffer(val.length / 2)
@@ -239,13 +239,21 @@ export function decodeAllInArray(): boolean{
         && arrayResult
 }
 
-/*export function decodeBytes(): ArrayBuffer {
+export function decodeBytes(): boolean {
+    const dataBuf: Uint8Array = new Uint8Array(2)
+    dataBuf.set([1,2])
+
     const buff = stringToArrayBuffer("420102")
 
     const decoder = new CBORDecoder(buff)
 
     const res = decoder.parse()
-    const obj = (<Obj>res).valueOf()
+    const bytes = (<Bytes>res).valueOf()
 
-    return 
-}*/
+    let ok = true
+    for(let i = 0; i < dataBuf.length; i++){
+        ok = ok && bytes[i] == dataBuf[i]
+    }
+
+    return ok
+}

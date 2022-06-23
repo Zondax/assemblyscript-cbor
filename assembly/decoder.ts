@@ -138,7 +138,7 @@ export class CBORDecoder{
         const initialByte = this.readUint8();
         if (initialByte === 0xff)
             return -1;
-        var length = this.readLength(initialByte & 0x1f);
+        let length = this.readLength(initialByte & 0x1f);
         if (length < 0 || (initialByte >> 5) !== majorType)
             throw "Invalid indefinite length element";
         return length;
@@ -214,26 +214,30 @@ export class CBORDecoder{
                 this.lastKey = ""
                 return
             case 2:
-                // FIXME need support to Uint8Array on types, as this is a unstructured byte array
-                /*if (length < 0) {
+                if (length < 0) {
                     const elements = new Array<Uint8Array>();
                     let fullArrayLength = 0;
                     while ((length = this.readIndefiniteStringLength(majorType)) >= 0) {
-                        fullArrayLength += length;
-                        elements.push(this.readArrayBuffer(length));
+                        fullArrayLength += i32(length);
+                        elements.push(this.readArrayBuffer(u32(length)));
                     }
                     const fullArray = new Uint8Array(fullArrayLength);
                     let fullArrayOffset = 0;
-                    for (i = 0; i < elements.length; ++i) {
+                    for (let i = 0; i < elements.length; ++i) {
                         fullArray.set(elements[i], fullArrayOffset);
                         fullArrayOffset += elements[i].length;
                     }
-                    this.handler.pushArray("")
-                    this.readArrayBuffer(length);
-                    return fullArray.toString("hex");
+
+                    this.handler.setBytes(this.lastKey, fullArray)
+                    this.lastKey = ""
+                    return
                 }
-                this.handler.pushArray("")
-                this.readArrayBuffer(length);*/
+
+                const arr = this.readArrayBuffer(u32(length));
+                this.handler.setBytes(this.lastKey, arr)
+                this.lastKey = ""
+
+                return
             case 3:
                 // https://github.com/AssemblyScript/assemblyscript/issues/1609
                 const utf16data: i32[] = [];

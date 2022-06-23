@@ -6,7 +6,7 @@ import {
     decodeNull,
     decodeFloat32, decodeFloat64,
     decodeObject,
-    decodeArrayU8, decodeArray, decodeAllInArray,
+    decodeArrayU8, decodeArray, decodeAllInArray, decodeBytes,
     decodeAllInObj, decodeNestedObjs
 } from "../build/debug.js";
 
@@ -50,4 +50,8 @@ assert.equal(result, true)
 
 result = decodeAllInArray()
 assert.equal(result, true)
+
+result = decodeBytes()
+assert.equal(result, true)
+
 
