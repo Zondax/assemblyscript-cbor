@@ -71,33 +71,17 @@ export class CBOREncoder {
         this.addString(key);
     }
 
+    addBytes(value:Uint8Array):void {
+        this.writeTypeAndLength(2, value.byteLength);
+        this.writeUint8Array(value);
+    }
+
     addString(value:string):void {
-        const utf8data: Array<u8> = [];
-        for (let i = 0; i < value.length; ++i) {
-            let charCode = value.charCodeAt(i);
-            if (charCode < 0x80) {
-                utf8data.push(u8(charCode));
-            } else if (charCode < 0x800) {
-                utf8data.push(u8(0xc0 | charCode >> 6));
-                utf8data.push(u8(0x80 | charCode & 0x3f));
-            } else if (charCode < 0xd800) {
-                utf8data.push(u8(0xe0 | charCode >> 12));
-                utf8data.push(u8(0x80 | (charCode >> 6)  & 0x3f));
-                utf8data.push(u8(0x80 | charCode & 0x3f));
-            } else {
-                charCode = (charCode & 0x3ff) << 10;
-                charCode |= value.charCodeAt(++i) & 0x3ff;
-                charCode += 0x10000;
+        const utf8data = String.UTF8.encode(value);
+        const buffer: Uint8Array = Uint8Array.wrap(utf8data);
 
-                utf8data.push(u8(0xf0 | charCode >> 18));
-                utf8data.push(u8(0x80 | (charCode >> 12)  & 0x3f));
-                utf8data.push(u8(0x80 | (charCode >> 6)  & 0x3f));
-                utf8data.push(u8(0x80 | charCode & 0x3f));
-            }
-        }
-
-        this.writeTypeAndLength(3, utf8data.length);
-        this.writeUint8Array(utf8data);
+        this.writeTypeAndLength(3, buffer.length);
+        this.writeUint8Array(buffer);
     }
 
     addArrayU8(value:Array<u8>):void{
@@ -193,10 +177,11 @@ export class CBOREncoder {
         this.commitWrite();
     }
 
-    private writeUint8Array(value:Array<u8>):void {
-        this.prepareWrite(value.length);
-        for (let i = 0; i < value.length; ++i)
-            this.dataView.setUint8(this.offset + i, value[i]);
+    private writeUint8Array(value:Uint8Array):void {
+        this.prepareWrite(value.byteLength);
+        for (let i = 0; i < value.byteLength; ++i) {
+            this.dataView.setUint8(this.offset + i, value.at(i));
+        }
         this.commitWrite();
     }
 

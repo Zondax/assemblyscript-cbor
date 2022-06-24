@@ -92,6 +92,13 @@ export function encodeString():ArrayBuffer {
     return encoder.serialize()
 }
 
+export function encodeStringWithWeirdChar():ArrayBuffer {
+    const encoder = new CBOREncoder()
+    encoder.addString("léa")
+
+    return encoder.serialize()
+}
+
 export function encodeFalse():ArrayBuffer {
     const encoder = new CBOREncoder()
     encoder.addBoolean(false)
@@ -111,6 +118,16 @@ export function encodeArrayU8():ArrayBuffer {
 
     const encoder = new CBOREncoder()
     encoder.addArrayU8(data)
+
+    return encoder.serialize()
+}
+
+export function encodeBytes():ArrayBuffer {
+    const data: Uint8Array = new Uint8Array(2)
+    data.set([1,2])
+
+    const encoder = new CBOREncoder()
+    encoder.addBytes(data)
 
     return encoder.serialize()
 }
@@ -140,8 +157,11 @@ export function encodeArray():ArrayBuffer {
 export function encodeAllInObj():ArrayBuffer {
     const data :u8[] = [1, 43, 66, 234, 111]
 
+    const dataBuf: Uint8Array = new Uint8Array(2)
+    dataBuf.set([1,2])
+
     const encoder = new CBOREncoder()
-    encoder.addObject(15)
+    encoder.addObject(16)
     encoder.addKey("uint8")
     encoder.addUint8(132)
     encoder.addKey("uint16")
@@ -172,6 +192,8 @@ export function encodeAllInObj():ArrayBuffer {
     encoder.addF64(166665455.55)
     encoder.addKey("f32")
     encoder.addF32(78752.323123)
+    encoder.addString("bytes")
+    encoder.addBytes(dataBuf)
 
     return encoder.serialize()
 }
@@ -181,7 +203,7 @@ export function encodeAllInArray():ArrayBuffer {
     const data :u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
-    encoder.addArray(31)
+    encoder.addArray(33)
     encoder.addString("uint8")
     encoder.addUint8(132)
     encoder.addString("uint16")
@@ -212,11 +234,13 @@ export function encodeAllInArray():ArrayBuffer {
     encoder.addF32(78752.323123)
     encoder.addString("arrayU8")
     encoder.addArrayU8(data)
-    encoder.addObject(2)
+    encoder.addObject(1)
     encoder.addKey("int16")
     encoder.addInt16(-31500)
-    encoder.addKey("int16")
-    encoder.addInt16(-31500)
+    encoder.addString("bytes")
+    const dataBuf: Uint8Array = new Uint8Array(2)
+    dataBuf.set([1,2])
+    encoder.addBytes(dataBuf)
 
     return encoder.serialize()
 }

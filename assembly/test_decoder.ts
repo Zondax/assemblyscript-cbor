@@ -1,5 +1,5 @@
 import {CBORDecoder} from "./decoder";
-import {Arr, Bool, Float, Integer, Null, Obj, Str, Undefined, Value} from "./types";
+import {Arr, Bytes, Bool, Float, Integer, Null, Obj, Str, Undefined, Value} from "./types";
 
 function stringToArrayBuffer(val: string): ArrayBuffer {
     const buff = new ArrayBuffer(val.length / 2)
@@ -81,6 +81,16 @@ export function decodeString(): string {
     return str
 }
 
+export function decodeStringWithWeirdChar(): string {
+    const buff = stringToArrayBuffer("647A6FC3A9")
+
+    const decoder = new CBORDecoder(buff)
+    const res = decoder.parse()
+
+    const str = (<Str>res).valueOf();
+    return str
+}
+
 export function decodeObject(): boolean {
     const buff = stringToArrayBuffer("a2646b65793101646b6579321864")
 
@@ -128,7 +138,8 @@ export function decodeArray(): boolean {
 
 export function decodeAllInObj(): boolean{
     const fixArray: u8[] = [1, 43, 66, 234, 111]
-    const buff = stringToArrayBuffer("af6575696e743818846675696e74313619199a6675696e7433321a006401906675696e7436341b0000006792a7f0fa64696e7438387e65696e743136397b0b65696e7433323a0064018f65696e7436343b0000006792a7f0f967617272617955388501182b184218ea186f6a747275652d76616c7565f56b66616c73652d76616c7565f46a6e756c6c2d76616c7565f66f756e646566696e65642d76616c7565f763663634fb41a3de39df19999a63663332fb40f33a0520000000")
+    const bytesArray: u8[] = [1, 2]
+    const buff = stringToArrayBuffer("b06575696e743818846675696e74313619199a6675696e7433321a006401906675696e7436341b0000006792a7f0fa64696e7438387e65696e743136397b0b65696e7433323a0064018f65696e7436343b0000006792a7f0f967617272617955388501182b184218ea186f6a747275652d76616c7565f56b66616c73652d76616c7565f46a6e756c6c2d76616c7565f66f756e646566696e65642d76616c7565f763663634fb41a3de39df19999a63663332fb40f33a0520000000656279746573420102")
 
     const decoder = new CBORDecoder(buff)
 
@@ -150,10 +161,16 @@ export function decodeAllInObj(): boolean{
     const f64 = (<Float>obj.get("f64")).valueOf()
     const f32 = (<Float>obj.get("f32")).valueOf()
     const arrayU8 = (<Arr>obj.get("arrayU8")).valueOf()
+    const bytes = (<Bytes>obj.get("bytes")).valueOf()
 
     let arrayResult = arrayU8.length == fixArray.length
     for( let i = 0; i < fixArray.length; i++){
         arrayResult = arrayResult && (<Integer>arrayU8.at(i)).valueOf() == fixArray[i];
+    }
+
+    let bytesResult = bytes.length == bytesArray.length
+    for( let i = 0; i < bytesArray.length; i++){
+        bytesResult = bytesResult && (bytes[i] == bytesArray[i]);
     }
 
     return      uint8 == 132 && uint16 == 6554 && uint32 == 6554000 && uint64 == 444842111226
@@ -161,6 +178,7 @@ export function decodeAllInObj(): boolean{
             && !!trueVal && !falseVal && !nullVal && !undefinedVal
             && f64 == 166665455.55 && f32 == 78752.3203125
             && arrayResult
+            && bytesResult
 }
 
 
@@ -181,7 +199,8 @@ export function decodeNestedObjs(): bool{
 
 export function decodeAllInArray(): boolean{
     const fixArray: u8[] = [1, 43, 66, 234, 111]
-    const buff = stringToArrayBuffer("981f6575696e743818846675696e74313619199a6675696e7433321a006401906675696e7436341b0000006792a7f0fa64696e7438387e65696e743136397b0b65696e7433323a0064018f65696e7436343b0000006792a7f0f96a747275652d76616c7565f56b66616c73652d76616c7565f46a6e756c6c2d76616c7565f66f756e646566696e65642d76616c7565f763663634fb41a3de39df19999a63663332fb40f33a052000000067617272617955388501182b184218ea186fa265696e743136397b0b65696e743136397b0b")
+    const bytesArray: u8[] = [1, 2]
+    const buff = stringToArrayBuffer("98216575696e743818846675696e74313619199a6675696e7433321a006401906675696e7436341b0000006792a7f0fa64696e7438387e65696e743136397b0b65696e7433323a0064018f65696e7436343b0000006792a7f0f96a747275652d76616c7565f56b66616c73652d76616c7565f46a6e756c6c2d76616c7565f66f756e646566696e65642d76616c7565f763663634fb41a3de39df19999a63663332fb40f33a052000000067617272617955388501182b184218ea186fa165696e743136397b0b656279746573420102")
 
     const decoder = new CBORDecoder(buff)
 
@@ -203,6 +222,7 @@ export function decodeAllInArray(): boolean{
     const f64Str = (<Str>arr.at(24)).valueOf()
     const f32Str = (<Str>arr.at(26)).valueOf()
     const arrayU8Str = (<Str>arr.at(28)).valueOf()
+    const bytesStr = (<Str>arr.at(31)).valueOf()
 
     const uint8 = (<Integer>arr.at(1)).valueOf()
     const uint16 = (<Integer>arr.at(3)).valueOf()
@@ -220,10 +240,16 @@ export function decodeAllInArray(): boolean{
     const f32 = (<Float>arr.at(27)).valueOf()
     const arrayU8 = (<Arr>arr.at(29)).valueOf()
     const obj = (<Obj>arr.at(30)).valueOf()
+    const bytes = (<Bytes>arr.at(32)).valueOf()
 
     let arrayResult = arrayU8.length == fixArray.length
     for( let i = 0; i < fixArray.length; i++){
         arrayResult = arrayResult && (<Integer>arrayU8.at(i)).valueOf() == fixArray[i];
+    }
+
+    let bytesResult = bytesArray.length == bytes.length
+    for( let i = 0; i < bytesArray.length; i++){
+        bytesResult = bytesResult && ( bytesArray[i] == bytes[i] );
     }
 
     const strResult =  uint8Str == "uint8" && uint16Str == "uint16" && uint32Str == "uint32" && uint64Str == "uint64"
@@ -231,10 +257,31 @@ export function decodeAllInArray(): boolean{
                     && trueValStr == "true-value" && falseValStr == "false-value" && nullValStr == "null-value" && undefinedValStr == "undefined-value"
                     && f64Str == "f64" && f32Str == "f32"
                     && arrayU8Str == "arrayU8"
+                    && bytesStr == "bytes"
 
     return strResult && uint8 == 132 && uint16 == 6554 && uint32 == 6554000 && uint64 == 444842111226
         &&  int8 == -127 && int16 == -31500 && int32 == -6554000 && int64 == -444842111226
         && !!trueVal && !falseVal && !nullVal && !undefinedVal
         && f64 == 166665455.55 && f32 == 78752.3203125
         && arrayResult
+        && bytesResult
+}
+
+export function decodeBytes(): boolean {
+    const dataBuf: Uint8Array = new Uint8Array(2)
+    dataBuf.set([1,2])
+
+    const buff = stringToArrayBuffer("420102")
+
+    const decoder = new CBORDecoder(buff)
+
+    const res = decoder.parse()
+    const bytes = (<Bytes>res).valueOf()
+
+    let ok = true
+    for(let i = 0; i < dataBuf.length; i++){
+        ok = ok && bytes[i] == dataBuf[i]
+    }
+
+    return ok
 }

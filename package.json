@@ -15,7 +15,7 @@
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
     "asbuild:test:debug": "asc assembly/test_index.ts --target debug --exportRuntime",
     "asbuild:test": "npm run asbuild:test:debug",
-    "test": "jest"
+    "test": "node tests/encoding.test.js && node tests/decoding.test.js"
   },
   "type": "module",
   "exports": {

@@ -2,11 +2,12 @@ import * as assert from "assert";
 import {
     decodeFalse, decodeTrue,
     decodeString,
+    decodeStringWithWeirdChar,
     decodeInteger,
     decodeNull,
     decodeFloat32, decodeFloat64,
     decodeObject,
-    decodeArrayU8, decodeArray, decodeAllInArray,
+    decodeArrayU8, decodeArray, decodeAllInArray, decodeBytes,
     decodeAllInObj, decodeNestedObjs
 } from "../build/debug.js";
 
@@ -33,6 +34,9 @@ assert.equal(result, 11231241314.11111)
 result = decodeString()
 assert.equal(result, "test value")
 
+result = decodeStringWithWeirdChar()
+assert.equal(result, "zoé")
+
 result = decodeObject()
 assert.equal(result, true)
 
@@ -50,4 +54,8 @@ assert.equal(result, true)
 
 result = decodeAllInArray()
 assert.equal(result, true)
+
+result = decodeBytes()
+assert.equal(result, true)
+
 

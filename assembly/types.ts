@@ -32,9 +32,13 @@ export abstract class JSONHandler {
 
     setNull(name: string): void {}
 
+    setUndefined(name: string): void {}
+
     setInteger(name: string, value: i64): void {}
 
     setFloat(name: string, value: f64): void {}
+
+    setBytes(name: string, value: Uint8Array): void {}
 
     pushArray(name: string): bool {
         return true;
@@ -59,6 +63,7 @@ export class Handler extends JSONHandler {
     }
 
     get peek(): Value {
+        if( this.stack.length == 0 ) throw new Error("decoded data is empty")
         return this.stack[this.stack.length - 1];
     }
 
@@ -89,6 +94,11 @@ export class Handler extends JSONHandler {
 
     setFloat(name: string, value: f64): void {
         const obj = Value.Float(value);
+        this.addValue(name, obj);
+    }
+
+    setBytes(name: string, value: Uint8Array): void {
+        const obj = Value.Bytes(value);
         this.addValue(name, obj);
     }
 
@@ -163,6 +173,9 @@ export abstract class Value {
     static Undefined(): Undefined {
         return UNDEFINED;
     }
+    static Bytes(arr: Uint8Array): Bytes {
+        return new Bytes(arr);
+    }
     static Array(): Arr {
         return new Arr();
     }
@@ -196,6 +209,10 @@ export abstract class Value {
 
     get isUndefined(): boolean {
         return this instanceof Undefined;
+    }
+
+    get isBytes(): boolean {
+        return this instanceof Bytes;
     }
 
     get isArr(): boolean {
@@ -310,6 +327,20 @@ export class Bool extends Value {
 
     valueOf(): bool {
         return this._bool;
+    }
+}
+
+export class Bytes extends Value {
+    constructor(public _uint8arr: Uint8Array) {
+        super();
+    }
+
+    stringify(): string {
+        return "h'" + this._uint8arr.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "") + "'";
+    }
+
+    valueOf(): Uint8Array {
+        return this._uint8arr;
     }
 }
 
@@ -433,6 +464,14 @@ export class Obj extends Value {
         let jsonValue = this.get(key);
         if (jsonValue != null && jsonValue.isBool) {
             return <Bool>jsonValue;
+        }
+        return null;
+    }
+
+    getBytes(key: string): Bytes | null {
+        let jsonValue = this.get(key);
+        if (jsonValue != null && jsonValue.isBytes) {
+            return <Bytes>jsonValue;
         }
         return null;
     }
