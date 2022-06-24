@@ -135,13 +135,19 @@ export class CBOREncoder {
     }
 
     addF32(value:f32):void {
-        this.writeUint8(0xfb);
-        this.writeFloat64(f64(value))
+        this.writeUint8(0xfa);
+        this.writeFloat32(value)
     }
 
     addF64(value:f64):void {
         this.writeUint8(0xfb);
         this.writeFloat64(value)
+    }
+
+    private writeFloat32(value:f32):void {
+        this.prepareWrite(4)
+        this.dataView.setFloat32(this.offset, value)
+        this.commitWrite();
     }
 
     private writeFloat64(value:f64):void {
