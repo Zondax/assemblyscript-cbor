@@ -263,3 +263,76 @@ export function encodeNestedObjs():ArrayBuffer {
 
     return encoder.serialize()
 }
+
+export function encodeMaps_empty():ArrayBuffer {
+    const map = new Map<string, string>()
+
+    const encoder = new CBOREncoder()
+    encoder.addObject(1)
+    encoder.addKey("map")
+    encoder.addObject(map.keys().length)
+    for( let a = 0; a < map.keys().length; a++ ){
+        encoder.addKey(map.keys()[a].toString())
+        encoder.addString(map.get(map.keys()[a]))
+    }
+
+    return encoder.serialize()
+}
+
+export function encodeMaps_full():ArrayBuffer {
+    const map = new Map<string, string>()
+    map.set("key1", "value1")
+    map.set("key2", "value1")
+    map.set("key3", "value1")
+    map.set("key4", "value1")
+    map.set("key5", "value1")
+    map.set("key6", "value1")
+
+    const encoder = new CBOREncoder()
+    encoder.addObject(1)
+    encoder.addKey("map")
+    const keys = map.keys()
+    encoder.addObject(keys.length)
+    for( let a = 0; a < keys.length; a++ ){
+        encoder.addKey(keys[a].toString())
+        encoder.addString(map.get(keys[a]))
+    }
+
+    return encoder.serialize()
+}
+
+export function encodeMisc(): ArrayBuffer {
+    const map = new Map<string, string>()
+    map.set("key1", "data")
+
+    const encoder = new CBOREncoder();
+    encoder.addObject(4)
+    encoder.addKey("count")
+    encoder.addUint64(0)
+    encoder.addKey("msg")
+    encoder.addString("")
+    encoder.addKey("decimal")
+    encoder.addF64(0.0)
+    encoder.addKey("map")
+    let keys_a = map.keys()
+    encoder.addObject(keys_a.length)
+    for(let a = 0; a < keys_a.length; a++){
+        encoder.addKey(keys_a[a].toString())
+        encoder.addString(map.get(keys_a[a]))
+    }
+
+    return encoder.serialize()
+}
+
+
+export function encodeFloats():ArrayBuffer {
+
+    const encoder = new CBOREncoder()
+    encoder.addObject(2)
+    encoder.addKey("f32")
+    encoder.addF32(1.111)
+    encoder.addKey("f64")
+    encoder.addF64(1.111)
+
+    return encoder.serialize()
+}
