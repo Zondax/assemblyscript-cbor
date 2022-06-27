@@ -355,6 +355,10 @@ export class Arr extends Value {
         this._arr.push(obj);
     }
 
+    pop(): Value {
+        return this._arr.pop();
+    }
+
     stringify(): string {
         return (
             "[" +
