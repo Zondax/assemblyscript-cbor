@@ -359,6 +359,14 @@ export class Arr extends Value {
         return this._arr.pop();
     }
 
+    at(index: i32): Value {
+        return this._arr.at(index);
+    }
+
+    get length(): i32 {
+        return this._arr.length
+    }
+
     stringify(): string {
         return (
             "[" +
