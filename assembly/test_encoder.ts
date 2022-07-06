@@ -118,8 +118,8 @@ export function encodeArrayU8():ArrayBuffer {
 
     const encoder = new CBOREncoder()
     encoder.addArray(data.length)
-    for (let u of data) {
-        encoder.addUint8(u)
+    for (let i = 0; i < data.length; i++) {
+        encoder.addUint8(data[i])
     }
 
     return encoder.serialize()
@@ -164,7 +164,7 @@ export function encodeAllInObj():ArrayBuffer {
     dataBuf.set([1,2])
 
     const encoder = new CBOREncoder()
-    encoder.addObject(16)
+    encoder.addObject(15)
     encoder.addKey("uint8")
     encoder.addUint8(132)
     encoder.addKey("uint16")
@@ -181,8 +181,6 @@ export function encodeAllInObj():ArrayBuffer {
     encoder.addInt32(-6554000)
     encoder.addKey("int64")
     encoder.addInt64(-444842111226)
-    encoder.addKey("arrayU8")
-    encoder.addArrayU8(data)
     encoder.addKey("true-value")
     encoder.addBoolean(true)
     encoder.addKey("false-value")
@@ -206,7 +204,7 @@ export function encodeAllInArray():ArrayBuffer {
     const data :u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
-    encoder.addArray(33)
+    encoder.addArray(31)
     encoder.addString("uint8")
     encoder.addUint8(132)
     encoder.addString("uint16")
@@ -235,8 +233,6 @@ export function encodeAllInArray():ArrayBuffer {
     encoder.addF64(166665455.55)
     encoder.addString("f32")
     encoder.addF32(78752.323123)
-    encoder.addString("arrayU8")
-    encoder.addArrayU8(data)
     encoder.addObject(1)
     encoder.addKey("int16")
     encoder.addInt16(-31500)
