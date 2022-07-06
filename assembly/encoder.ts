@@ -84,12 +84,6 @@ export class CBOREncoder {
         this.writeUint8Array(buffer);
     }
 
-    addArrayU8(value:Array<u8>):void{
-        this.writeTypeAndLength(4, value.length);
-        for (let i = 0; i < value.length; ++i)
-            this.writeTypeAndLength(0, u64(value[i]));
-    }
-
     addUint8(value:u8):void {
         this.writeTypeAndLength(0, u64(value))
     }
