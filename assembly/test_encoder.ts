@@ -117,7 +117,10 @@ export function encodeArrayU8():ArrayBuffer {
     const data:u8[] = [1, 43, 66, 234, 111]
 
     const encoder = new CBOREncoder()
-    encoder.addArrayU8(data)
+    encoder.addArray(data.length)
+    for (let u of data) {
+        encoder.addUint8(u)
+    }
 
     return encoder.serialize()
 }
