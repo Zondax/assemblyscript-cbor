@@ -285,3 +285,19 @@ export function decodeBytes(): boolean {
 
     return ok
 }
+
+export function decodeArrayInArray(): Array<u64> {
+    const buff = stringToArrayBuffer("81811864")
+
+    const decoder = new CBORDecoder(buff)
+
+    const res = decoder.parse()
+    let state = (res as Arr).valueOf()
+    let participants_raw = (state.at(0) as Arr).valueOf()
+    let participants = new Array<u64>()
+    for (let b = 0; b < participants_raw.length; b++) {
+      participants.push(u64((participants_raw.at(b) as Integer).valueOf()))
+    }
+
+    return participants
+}

@@ -8,7 +8,8 @@ import {
     decodeFloat32, decodeFloat64,
     decodeObject,
     decodeArrayU8, decodeArray, decodeAllInArray, decodeBytes,
-    decodeAllInObj, decodeNestedObjs
+    decodeAllInObj, decodeNestedObjs,
+    decodeArrayInArray
 } from "../build/debug.js";
 
 let result;
@@ -58,4 +59,5 @@ assert.equal(result, true)
 result = decodeBytes()
 assert.equal(result, true)
 
-
+result = decodeArrayInArray()
+assert.deepEqual(result, [100n])
